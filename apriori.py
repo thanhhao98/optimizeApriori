@@ -1,8 +1,7 @@
 from utils import SupportRecord, RelationRecord, OrderedStatistic, TransactionManager
 from itertools import combinations
-from apyori import apriori as apyori
-import time
-import json
+# from utils import generateData, drawPlot
+
 
 
 def create_next_candidates(prev_candidates, length):
@@ -107,69 +106,3 @@ def apriori(transactions, items, **kwargs):
             continue
         yield RelationRecord(
             support_record.items, support_record.support, ordered_statistics)
-
-
-if __name__ == '__main__':
-    with open('transactions.json','rb') as f:
-        rTransactions = json.load(f)
-    with open('items.json','rb') as f:
-        items = json.load(f)
-    
-    # gTransactions = generateData(items,500000)
-    transactions = rTransactions
-
-    min_support = 0.02
-    min_confidence = 0.1
-    min_lift = 0.0
-    max_length = None
-
-    start = time.time()
-    results2 = list(apriori(transactions=transactions, items=items, min_confidence=min_confidence,min_support=min_support,min_lift=min_lift,numReduce=1))
-    t2 = time.time()-start
-    print(len(results2))
-    print(t2)
-    print()
-    for i in results2[:5]:
-        print(i)
-
-
-    start = time.time()
-    results1 = list(apyori(transactions,min_confidence=min_confidence,min_support=min_support,min_lift=min_lift))
-    t1 = time.time()-start
-    print(len(results1))
-    print(t1)
-    for i in results1[:5]:
-        print(i)
-
-    print(t1/t2)
-
-    # items = list(map(lambda x: str(x), range(10000)))
-    # numDatas = [1000]#,10000,20000,30000]#,40000,50000,60000,70000,80000,90000,100000]
-    # r1 = []
-    # r2 = []
-    # s = []
-    # for numData in numDatas:
-    #     gTransactions = generateData(items,numData)
-    #     transactions = gTransactions
-
-    #     min_support = 0.02
-    #     min_confidence = 0.1
-    #     min_lift = 0.0
-    #     max_length = None
-
-    #     start = time.time()
-    #     results1 = list(apyori(transactions,min_confidence=min_confidence,min_support=min_support,min_lift=min_lift))
-    #     t1 = time.time()-start
-    #     r1.append(t1)
-
-        
-    #     start = time.time()
-    #     results2 = list(apriori(transactions=transactions, items=items, min_confidence=min_confidence,min_support=min_support,min_lift=min_lift))
-    #     t2 = time.time()-start
-    #     r2.append(t2)
-    #     s.append(t1/t2)
-    # print(r1)
-
-    # print(r2)
-
-    # print(s)

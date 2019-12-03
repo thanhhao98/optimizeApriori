@@ -2,12 +2,44 @@ from itertools import combinations
 from functools import reduce
 from collections import namedtuple
 from bloomFilter import BloomFilter
+import matplotlib.pyplot as plt
 import random
+import json
+
 
 
 SupportRecord = namedtuple('SupportRecord', ('items', 'support'))
 RelationRecord = namedtuple('RelationRecord', SupportRecord._fields + ('ordered_statistics',))
 OrderedStatistic = namedtuple('OrderedStatistic', ('items_base', 'items_add', 'confidence', 'lift',))
+
+
+def loadBaseDataSet():
+    with open('transactions.json','rb') as f:
+        transactions = json.load(f)
+    with open('items.json','rb') as f:
+        items = json.load(f)
+    return transactions, items
+
+
+def backup(numDatas,target,optimizedLib):
+    status = len(numDatas)==len(target)
+    resultCompareSpeed = {
+        'status': status,
+        'numDatas': numDatas,
+        'target': target,
+        'optimizedLib': optimizedLib
+    }
+    with open('resultCompareSpeed.json', 'w') as outfile:
+        json.dump(resultCompareSpeed, outfile)
+
+
+def drawPlot(x, listy, labels, labelD):
+    for i in zip(listy, labels):
+        plt.plot(x, i[0], label=i[1])
+    plt.xlabel(labelD['x'])
+    plt.ylabel(labelD['y'])
+    plt.legend()
+    return plt
 
 
 def generateData(items, numData, minItems=2, maxItems=20):
