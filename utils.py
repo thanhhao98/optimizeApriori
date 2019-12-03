@@ -14,22 +14,22 @@ OrderedStatistic = namedtuple('OrderedStatistic', ('items_base', 'items_add', 'c
 
 
 def loadBaseDataSet():
-    with open('transactions.json','rb') as f:
+    with open('realData/transactions.json','rb') as f:
         transactions = json.load(f)
-    with open('items.json','rb') as f:
+    with open('realData/items.json','rb') as f:
         items = json.load(f)
     return transactions, items
 
 
-def backup(numDatas,target,optimizedLib):
+def backup(fileName, numDatas,target,optimizedLib):
     status = len(numDatas)==len(target)
     resultCompareSpeed = {
         'status': status,
         'numDatas': numDatas,
         'target': target,
-        'optimizedLib': optimizedLib
+        'other': optimizedLib
     }
-    with open('resultCompareSpeed.json', 'w') as outfile:
+    with open(fileName, 'w') as outfile:
         json.dump(resultCompareSpeed, outfile)
 
 

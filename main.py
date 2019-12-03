@@ -1,12 +1,13 @@
 from apriori import apriori as targetApriori
 from apyori import apriori as pyLibOptimizedApriori
 from utils import generateData, drawPlot, backup, loadBaseDataSet
+from pureApriori import apriori as pureApriori
 import time
 
-
-def testSpeed():
-    _,items = loadBaseDataSet()
+def testSpeedWithLib():
     numDatas = [1000, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 200000, 400000, 600000, 800000, 1000000]
+    fileBackup = 'compareLibApyori/backup.json'
+    _,items = loadBaseDataSet()
     target = []
     optimizedLib = []
     for numData in numDatas:
@@ -27,11 +28,43 @@ def testSpeed():
         end2 = time.time()
         optimizedLib.append(end2-start2)
         print('Backing up...')
-        backup(numDatas, target, optimizedLib)
+        backup(fileBackup, numDatas, target, optimizedLib)
     labels = ['target', 'optimizedLib']
     labelD = {'y': 'Time (s)', 'x': 'Num Transactions'}
-    backup(numDatas, target, optimizedLib)
-    drawPlot(numDatas, [target, optimizedLib], labels, labelD).savefig('reslut.png')
+    backup(fileBackup,numDatas, target, optimizedLib)
+    drawPlot(numDatas, [target, optimizedLib], labels, labelD).savefig('compareLibApyori/reslut.png')
+    print('Done!'.center(100,' '))
+
+def testSpeedWithNormal():
+    fileBackup = 'compareNormal/backup.json'
+    _,items = loadBaseDataSet()
+    numDatas = [1000, 1500, 2000, 2500, 3000, 4000, 5000]
+    target = []
+    purePriori = []
+    for numData in numDatas:
+        gTransactions = generateData(items, numData)
+        transactions = gTransactions
+        print(f'Running with {len(transactions)}-dataset'.center(100,' '))
+        min_support = 0.02
+        min_confidence = 0.1
+        min_lift = 0.0
+
+        start1 = time.time()
+        result1 = list(targetApriori(transactions=transactions, items=items, min_confidence=min_confidence,min_support=min_support,min_lift=min_lift,numReduce=5))
+        end1 = time.time()
+        target.append(end1-start1)
+
+        start2 = time.time()
+        result2 = list(pureApriori(transactions,min_support))
+        end2 = time.time()
+        purePriori.append(end2-start2)
+
+        print('Backing up...')
+        backup(fileBackup, numDatas, target, purePriori)
+    labels = ['target', 'pureFuncion']
+    labelD = {'y': 'Time (s)', 'x': 'Num Transactions'}
+    backup(fileBackup,numDatas, target, purePriori)
+    drawPlot(numDatas, [target ,purePriori], labels, labelD).savefig('compareNormal/reslut.png')
     print('Done!'.center(100,' '))
 
 
@@ -50,4 +83,4 @@ def checkIsValid():
 
 if __name__ == '__main__':
     # checkIsValid()
-    testSpeed()
+    testSpeedWithLib()
