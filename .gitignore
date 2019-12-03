@@ -1,3 +1,6 @@
 .vscode
 __pycache__
 .ipynb_checkpoints
+compareNormal
+compareLibApyori
+realData
