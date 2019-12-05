@@ -30,10 +30,10 @@ def testSpeedWithLibMinSub():
         print(len(result2))
         print('Backing up...')
         backup(fileBackup, minSupports, target, optimizedLib)
-    labels = ['target', 'optimizedLib']
-    labelD = {'y': 'Time (s)', 'x': 'min_support'}
+    labels = ['target','optimizedLib']
+    labelD = {'y': 'Time (s)', 'x': '1/min_support'}
     backup(fileBackup,minSupports, target, optimizedLib)
-    drawPlot(lable, [target, optimizedLib], labels, labelD).savefig('compareMinSup/reslut.png')
+    drawPlot(lable, [optimizedLib,target], labels, labelD).savefig('compareMinSup/reslut.png')
     print('Done!'.center(100,' '))
 
 
@@ -117,4 +117,5 @@ def checkIsValid():
 
 if __name__ == '__main__':
     # checkIsValid()
-    testSpeedWithLib()
+    # testSpeedWithLib()
+    testSpeedWithLibMinSub()
